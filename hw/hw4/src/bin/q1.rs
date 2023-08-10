@@ -31,8 +31,8 @@ fn main(){
     };
     println!("{:>6}\t{:>6}", "Fahr","Celcius");
 
-    // fahr_to_cel_v(start, end, delta);
-    fahr_to_cel_v_2(start, end, delta);
+    fahr_to_cel_v(start, end, delta);
+    // fahr_to_cel_v_2(start, end, delta);
 }
 
 //q1.1
