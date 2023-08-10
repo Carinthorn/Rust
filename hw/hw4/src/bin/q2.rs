@@ -1,4 +1,7 @@
+// cargo run --bin q2 score1 score2 …
+// cargo test --test test_q2
 use std::num::ParseIntError;
+
 
 fn main(){
     let args: Vec<String> = std::env::args().collect();
@@ -12,8 +15,8 @@ fn main(){
     });
 
 
-    let converted_ans = make_grades(ans);
-    // let converted_ans = make_grades2(ans);
+    // let converted_ans: Vec<String> = make_grades(ans);
+    let converted_ans = make_grades2(ans);
     for i in converted_ans{
         print!("{} ", i);
     }
@@ -65,7 +68,7 @@ fn make_grades2(ans: Vec<i32>) -> Vec<String>{
         }else if element >= 50 {
             result.insert(0,"D".to_string());
         }else if element >= 0 {
-            result.insert(0,"F".to_string());
+            result.insert(0,"Failed with F".to_string());
         }
         result
     }

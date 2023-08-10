@@ -1,3 +1,5 @@
+// cargo run --bin q3 line_number
+// cargo test --test test_arr2
 
 
 fn main(){
@@ -13,7 +15,7 @@ fn main(){
     //q3.1
     // make_arrow1(line);
     //q3.2
-    make_arrow2(line);
+    // make_arrow2(line);
     
     //q3.3
     // make_arrow1_recur(line);
@@ -24,7 +26,7 @@ fn main(){
 fn make_arrow1(line: i32){
     for i in 1..(line*2+1){
         if i > line{
-            for n in (1..=(line*2-(i))).rev(){
+            for _ in (1..=(line*2-(i))).rev(){
                 print!("*");
             }
             if i == line*2{
@@ -32,7 +34,7 @@ fn make_arrow1(line: i32){
             }
             println!("{}", ("").trim_end());
         }else{
-            for j in 1..(i+1){
+            for _ in 1..(i+1){
                 print!("*");
             }
             println!("{}", ("").trim_end());

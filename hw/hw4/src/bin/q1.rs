@@ -1,5 +1,7 @@
+// cargo run --bin q1 f_start f_end delta
+// cargo test --test test_q1
 fn main(){
-    let args: Vec<String> = std::env::args().collect(); //read from command line
+    let args: Vec<String> = std::env::args().collect(); 
    
     if args.len() < 4 || args.len() > 4{
         print!("Input: <start_f> <end_f> <delta>");
@@ -31,8 +33,8 @@ fn main(){
     };
     println!("{:>6}\t{:>6}", "Fahr","Celcius");
 
-    fahr_to_cel_v(start, end, delta);
-    // fahr_to_cel_v_2(start, end, delta);
+    // fahr_to_cel_v(start, end, delta);
+    fahr_to_cel_v_2(start, end, delta);
 }
 
 //q1.1
