@@ -157,27 +157,34 @@ fn extract_quoted_words_r(text: &str) -> Vec<String> {
 
 
 
-
 #[cfg(test)]
 mod test{
     use std::vec;
 
     use super::{count_vowels, count_vowels_v2, count_vowels_r, split_grades, split_scores, extract_quoted_words, extract_quoted_words_r};
-    // #[test]
+    #[test]
     fn test_vowels_count1() {
         assert_eq!(count_vowels(""), 0);
         assert_eq!(count_vowels("abEcd"), 2);
         assert_eq!(count_vowels("ab12Exey5 7x8U3y5z"), 4);
+        assert_eq!(count_vowels("BnRtv"), 0);
+        assert_eq!(count_vowels("Hello, World!"), 3);
+        assert_eq!(count_vowels("Cats are cute."), 5);
+        assert_eq!(count_vowels("AEIOUaeiou"), 10);
     }
 
-    // #[test]
+    #[test]
     fn test_count_vowels_r(){
-        assert_eq!(count_vowels_r(""), 0);
-        assert_eq!(count_vowels_r("abEcd"), 2);
-        assert_eq!(count_vowels_r("ab12Exey5 7x8U3y5z"), 4);
+        assert_eq!(count_vowels(""), 0);
+        assert_eq!(count_vowels("abEcd"), 2);
+        assert_eq!(count_vowels("ab12Exey5 7x8U3y5z"), 4);
+        assert_eq!(count_vowels("BnRtv"), 0);
+        assert_eq!(count_vowels("Hello, World!"), 3);
+        assert_eq!(count_vowels("Cats are cute."), 5);
+        assert_eq!(count_vowels("AEIOUaeiou"), 10);
     }
 
-    // #[test]
+    #[test]
     fn test_vowels_count2() {
         assert_eq!(count_vowels_v2(""), []);
         assert_eq!(
@@ -187,10 +194,29 @@ mod test{
             ("7x8U3y5z".to_string(), 1) // 'U'
         ]
         );
+        assert_eq!(
+            count_vowels_v2("I am learning Rust!"),
+            vec![("I".to_string(), 1), ("am".to_string(), 1), ("learning".to_string(), 3), ("Rust!".to_string(), 1)]
+        );
+    
+        assert_eq!(
+            count_vowels_v2("AEIOUaeiou"),
+            vec![("AEIOUaeiou".to_string(), 10)]
+        );
+        
+        assert_eq!(
+            count_vowels_v2("BnRtv xYz M"),
+            vec![("BnRtv".to_string(), 0), ("xYz".to_string(), 0), ("M".to_string(), 0)]
+        );
+    
+        assert_eq!(
+            count_vowels_v2("Cats are cute."),
+            vec![("Cats".to_string(), 1), ("are".to_string(), 2), ("cute.".to_string(), 2)]
+        );
     }
 
     //2
-    // #[test]
+    #[test]
     fn test_split_grades(){
         assert_eq!(split_grades(vec![""]), (vec![], vec![]));
         assert_eq!(split_grades(vec!["H"]), (vec![], vec![]));
@@ -200,15 +226,16 @@ mod test{
         assert_eq!(split_grades(vec!["B", " ", "1", "hdj", "C"]), (vec!["B","C"], vec![]));
     }
 
-    // #[test]
+    #[test]
     fn test_split_scores(){
         assert_eq!(split_scores(vec![]),  (vec![], vec![]));
-        assert_eq!(split_scores(vec!["A", "B"]),  (vec![], vec![]));
+        assert_eq!(split_scores(vec![0]),  (vec![], vec![("F", 0)]));
+        assert_eq!(split_scores(vec![0, 90]),  (vec![("A", 90)], vec![("F", 0)]));
         assert_eq!(split_scores(vec![75, 42, 98, 54, 63]),  (vec![("B",75), ("A+", 98), ("C", 63)], vec![("F", 42), ("D", 54)]));
         assert_eq!(split_scores(vec![-1, 42, 105, 54, 63]),  (vec![("C", 63)], vec![("F", 42), ("D", 54)]));
     }
 
-    // #[test]
+    #[test]
     fn test_extract_quoted_words() {
         assert_eq!(extract_quoted_words(""), Vec::<String>::new());
         assert_eq!(extract_quoted_words_r("0"),Vec::<String>::new());
@@ -218,7 +245,7 @@ mod test{
     }
 
 
-    // #[test]
+    #[test]
     fn test_extract_quoted_words_r(){
         assert_eq!(extract_quoted_words_r(""),  Vec::<String>::new());
         assert_eq!(extract_quoted_words_r("0"),Vec::<String>::new());
