@@ -175,13 +175,13 @@ mod test{
 
     #[test]
     fn test_count_vowels_r(){
-        assert_eq!(count_vowels(""), 0);
-        assert_eq!(count_vowels("abEcd"), 2);
-        assert_eq!(count_vowels("ab12Exey5 7x8U3y5z"), 4);
-        assert_eq!(count_vowels("BnRtv"), 0);
-        assert_eq!(count_vowels("Hello, World!"), 3);
-        assert_eq!(count_vowels("Cats are cute."), 5);
-        assert_eq!(count_vowels("AEIOUaeiou"), 10);
+        assert_eq!(count_vowels_r(""), 0);
+        assert_eq!(count_vowels_r("abEcd"), 2);
+        assert_eq!(count_vowels_r("ab12Exey5 7x8U3y5z"), 4);
+        assert_eq!(count_vowels_r("BnRtv"), 0);
+        assert_eq!(count_vowels_r("Hello, World!"), 3);
+        assert_eq!(count_vowels_r("Cats are cute."), 5);
+        assert_eq!(count_vowels_r("AEIOUaeiou"), 10);
     }
 
     #[test]
@@ -236,11 +236,11 @@ mod test{
     }
 
     #[test]
-    fn test_extract_quoted_words() {
+    fn test_extract_quoted_words_1() {
         assert_eq!(extract_quoted_words(""), Vec::<String>::new());
-        assert_eq!(extract_quoted_words_r("0"),Vec::<String>::new());
+        assert_eq!(extract_quoted_words("0"),Vec::<String>::new());
         assert_eq!(extract_quoted_words("C ** *C++* *Java *Python* Rust*"),vec!["", "C++", "Python"]); 
-        assert_eq!(extract_quoted_words_r("C ** n*C++* *Java *Python*hj Rust*"),vec!["", "C++", "Python"]);
+        assert_eq!(extract_quoted_words("C ** n*C++* *Java *Python*hj Rust*"),vec!["", "C++", "Python"]);
 
     }
 
