@@ -1,0 +1,11 @@
+git add . = stage all changes in current directory
+git commit -m "msg" 
+git push origin <branch-name>
+
+
+console crate = like js used to print msg on terminal, not dealing with argument 
+structopt = dealing with argument and command line
+dialoguer = interactive dialogs in commandline to enhance user experrience
+tui = building text-based user interface like table, menues, text box
+rusqlite = connect to SQLite db 
+

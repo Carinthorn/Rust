@@ -1,1 +1,0 @@
-/Users/thunyaphon/Documents/GitHub/Rust/projects/todo/target/debug/todo: /Users/thunyaphon/Documents/GitHub/Rust/projects/todo/src/cli.rs /Users/thunyaphon/Documents/GitHub/Rust/projects/todo/src/main.rs /Users/thunyaphon/Documents/GitHub/Rust/projects/todo/src/task.rs
