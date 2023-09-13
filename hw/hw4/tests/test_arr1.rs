@@ -33,7 +33,6 @@ fn arr_zero_input(){
 #[test]
 fn arr_input(){//
     run(&"6", "tests/expected/arrow1_input_6.txt").expect("Test failed");
-
 }
 
 fn run(arg: &str, file: &str) -> Outcome {

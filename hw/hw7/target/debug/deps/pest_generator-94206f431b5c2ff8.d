@@ -1,0 +1,10 @@
+/Users/thunyaphon/Documents/GitHub/Rust/hw/hw7/target/debug/deps/pest_generator-94206f431b5c2ff8.rmeta: /Users/thunyaphon/.cargo/registry/src/index.crates.io-6f17d22bba15001f/pest_generator-2.7.3/src/lib.rs /Users/thunyaphon/.cargo/registry/src/index.crates.io-6f17d22bba15001f/pest_generator-2.7.3/src/macros.rs /Users/thunyaphon/.cargo/registry/src/index.crates.io-6f17d22bba15001f/pest_generator-2.7.3/src/docs.rs /Users/thunyaphon/.cargo/registry/src/index.crates.io-6f17d22bba15001f/pest_generator-2.7.3/src/generator.rs
+
+/Users/thunyaphon/Documents/GitHub/Rust/hw/hw7/target/debug/deps/libpest_generator-94206f431b5c2ff8.rlib: /Users/thunyaphon/.cargo/registry/src/index.crates.io-6f17d22bba15001f/pest_generator-2.7.3/src/lib.rs /Users/thunyaphon/.cargo/registry/src/index.crates.io-6f17d22bba15001f/pest_generator-2.7.3/src/macros.rs /Users/thunyaphon/.cargo/registry/src/index.crates.io-6f17d22bba15001f/pest_generator-2.7.3/src/docs.rs /Users/thunyaphon/.cargo/registry/src/index.crates.io-6f17d22bba15001f/pest_generator-2.7.3/src/generator.rs
+
+/Users/thunyaphon/Documents/GitHub/Rust/hw/hw7/target/debug/deps/pest_generator-94206f431b5c2ff8.d: /Users/thunyaphon/.cargo/registry/src/index.crates.io-6f17d22bba15001f/pest_generator-2.7.3/src/lib.rs /Users/thunyaphon/.cargo/registry/src/index.crates.io-6f17d22bba15001f/pest_generator-2.7.3/src/macros.rs /Users/thunyaphon/.cargo/registry/src/index.crates.io-6f17d22bba15001f/pest_generator-2.7.3/src/docs.rs /Users/thunyaphon/.cargo/registry/src/index.crates.io-6f17d22bba15001f/pest_generator-2.7.3/src/generator.rs
+
+/Users/thunyaphon/.cargo/registry/src/index.crates.io-6f17d22bba15001f/pest_generator-2.7.3/src/lib.rs:
+/Users/thunyaphon/.cargo/registry/src/index.crates.io-6f17d22bba15001f/pest_generator-2.7.3/src/macros.rs:
+/Users/thunyaphon/.cargo/registry/src/index.crates.io-6f17d22bba15001f/pest_generator-2.7.3/src/docs.rs:
+/Users/thunyaphon/.cargo/registry/src/index.crates.io-6f17d22bba15001f/pest_generator-2.7.3/src/generator.rs:

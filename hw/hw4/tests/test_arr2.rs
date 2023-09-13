@@ -14,7 +14,6 @@ fn arr2_blank_input(){
 fn arr2_str_input(){
     let mut cmd = Command::cargo_bin("q3").unwrap();
     cmd.arg("str").assert().failure().stdout("Enter a numeric value");
-    
 }
 
 #[test] //
@@ -22,8 +21,6 @@ fn arr2_neg_input(){
     let mut cmd =  Command::cargo_bin("q3").unwrap();
     cmd.arg("-3").assert().success().stdout("  *\n **\n***\n **\n  *\n");
 }
-
-
 
 #[test]
 fn arr2_zero_input(){
