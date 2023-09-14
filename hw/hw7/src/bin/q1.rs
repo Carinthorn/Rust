@@ -6,15 +6,15 @@ fn main(){
         args[1..].iter()
             .map(|x: &String| x.parse::<i32>())
             .collect::<Result<Vec<i32>, _>>()
-            .unwrap_or_else(|err|{
+            .unwrap_or_else(|_err|{
                 eprintln!("Enter valid integers");
-                std::process::exit(1);
+                std::process::exit(1)
             })
     } else {
         Vec::new()
     };
-    // let result: Vec<Vec<i32>> = sort_values(inp);
-    let result = sort_value2(inp);
+    let result: Vec<Vec<i32>> = sort_values(inp);
+    // let result: Vec<Vec<i32>> = sort_value2(inp);
     for i in result{
         println!("{:?}", i);
     }
