@@ -1,16 +1,17 @@
 use csv::{ReaderBuilder, Trim};
 use std::{fs::File, error::Error}; 
 
-
 pub trait DataItem {
     fn get_point(&self) -> (f32, f32);
 }
 //q1
+#[derive(Debug)]
 pub struct Point{
-    point : (f32,f32)
+    pub point : (f32,f32)
 }
+#[derive(Debug)]
 pub struct PolarPoint{
-    point : (f32,f32)
+    pub point : (f32,f32)
 }
 
 impl DataItem for Point {
