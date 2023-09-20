@@ -1,5 +1,5 @@
-use Pt2::{read_csv_cartesian, save_data, read_csv_polar, to_polar, to_cartesian};
-mod Pt2; 
+use pt2::{read_csv_cartesian, save_data, read_csv_polar};
+mod pt2; 
 
 fn main() {
 

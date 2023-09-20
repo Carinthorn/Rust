@@ -1,5 +1,5 @@
-use csv::{ReaderBuilder, Writer, Trim};
-use std::{io::Read, fs::File, error::Error}; 
+use csv::{ReaderBuilder, Trim};
+use std::{fs::File, error::Error}; 
 
 
 pub trait DataItem {
@@ -67,36 +67,29 @@ pub fn load_data(filename: &str) ->  Result<Vec<(f32, f32)>, Box<dyn Error>>{
 
 pub fn save_data<T:DataItem>(filename: &str, file_type: &str , data: Vec<T>) -> Result<(), Box<dyn Error>>{
     let file = File::create(filename.to_owned() + file_type)?;
+    let mut writer = csv::WriterBuilder::new()
+        .delimiter(b',')
+        .has_headers(false)
+        .from_writer(file);
 
-    if file_type == ".html"{
-        let html_data = convert_to_html(data);
-        let mut writer = csv::WriterBuilder::new()
-            .delimiter(b',')
-            .has_headers(false)
-            .from_writer(file);
-
-        writer.write_record(&[html_data])?;
-        writer.flush()?;
-        Ok(())
-    }
-    else if file_type == ".csv"{
-        let mut writer = csv::WriterBuilder::new()
-            .delimiter(b',')
-            .has_headers(false)
-            .from_writer(file);
-
-        for i in &data{
-            let (x, y) = i.get_point();
-            writer.write_record(&[x.to_string(), y.to_string()])?;
+    match file_type {
+        ".html" => {
+            let html_data = convert_to_html(data);
+            writer.write_record(&[html_data])?;
         }
-        writer.flush()?;
-        Ok(())
+        ".csv" => {
+            for i in &data{
+                let (x, y) = i.get_point();
+                writer.write_record(&[x.to_string(), y.to_string()])?;
+            }
+        }
+        _ => {
+            println!("Invalid file type");
+            return Ok(());
+        }
     }
-    else{
-        println!("Invalid file type");
-        Ok(())
-    }
-    
+    writer.flush()?;
+    Ok(())
 }
 
 pub fn convert_to_html<T:DataItem>(data: Vec<T>) -> String {
