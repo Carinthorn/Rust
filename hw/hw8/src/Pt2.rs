@@ -4,11 +4,13 @@ use std::{fs::File, error::Error};
 pub trait DataItem {
     fn get_point(&self) -> (f32, f32);
 }
+
 //q1
 #[derive(Debug)]
 pub struct Point{
     pub point : (f32,f32)
 }
+
 #[derive(Debug)]
 pub struct PolarPoint{
     pub point : (f32,f32)
@@ -19,6 +21,7 @@ impl DataItem for Point {
         self.point
     }
 }
+
 impl DataItem for PolarPoint {
     fn get_point(&self) -> (f32, f32) {
         self.point
