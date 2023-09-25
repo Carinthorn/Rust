@@ -156,10 +156,11 @@ fn save_data<T: Data>(data: Vec<T>, filename: &str, filetype: &str) -> Result<()
 pub fn load_data(filename: &str) -> Result<Vec<Layer>, Box<dyn Error>>{
     let file = File::open(filename)?;
     let mut reader = ReaderBuilder::new()
+        .flexible(true)
         .delimiter(b',')
         .has_headers(false)
         .from_reader(file);
-    let mut result = Vec::new();
+    let mut result: Vec<Layer> = Vec::new();
     for data in reader.records(){
         if let Ok(rec) = data {
             let name: String = rec[0].to_string();
@@ -169,10 +170,9 @@ pub fn load_data(filename: &str) -> Result<Vec<Layer>, Box<dyn Error>>{
                 let x:i32 = rec[i].parse()?;
                 let y:i32 = rec[i+1].parse()?;
                 let radius:i32 = rec[i+2].parse()?;
-                println!("x:{} y:{} r:{}", x, y, radius);
                 let circle = Circle{point: (x,y), radius};
                 circles.push(circle);
-            }
+            } 
             result.push(Layer{name, color, circles});
         }
     }
