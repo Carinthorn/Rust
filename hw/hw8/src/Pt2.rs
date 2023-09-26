@@ -48,7 +48,6 @@ pub fn to_cartesian(pt_list: Vec<PolarPoint>) -> Vec<Point>{
     cartesian_list
 }
 
-
 pub fn load_data(filename: &str) ->  Result<Vec<(f32, f32)>, Box<dyn Error>>{
     let file = File::open(filename)?;
     let mut reader = ReaderBuilder::new()
@@ -67,7 +66,6 @@ pub fn load_data(filename: &str) ->  Result<Vec<(f32, f32)>, Box<dyn Error>>{
     }
     Ok(output)
 }
-
 
 pub fn save_data<T:DataItem>(filename: &str, file_type: &str , data: Vec<T>) -> Result<(), Box<dyn Error>>{
     let file = File::create(filename.to_owned() + file_type)?;
@@ -119,7 +117,6 @@ table, td {
         html.push_str(&format!("{:2}<tr>\n", ""));
     }
     html.push_str("<table>\n");
-
     html
 }
 

@@ -17,7 +17,22 @@ fn main() {
     //             Circle{point: (0,0), radius: 5}, 
     //             Circle{point: (0,0), radius: 10}]}
     //     ]);
-    // let r = layers_save_csv(2, "output", "csv"); //but need to eliminate quote at the end
+    //let r = layers_save_csv(2, "output", "csv"); //but need to eliminate quote at the end
     let n = read_csv("output.csv", "output2");
     
 }
+
+
+ // let mut max = 0.0;
+    // let mut min = 0.0;
+    // for i in data{
+    //     let dt = i.get_data().split(",").collect::<Vec<&str>>();
+    //     let y = dt[1].parse::<f32>().unwrap();
+    //     if y > max{
+    //         max = y;
+    //     }
+    //     if y < min{
+    //         min = y;
+    //     }
+    // }
+    // (max, min)

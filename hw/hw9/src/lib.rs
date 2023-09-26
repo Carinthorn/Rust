@@ -1,15 +1,16 @@
-//find help kw
 
 //1.1 test case
 use rand::{Rng, thread_rng};
 use csv::{ReaderBuilder, WriterBuilder, Reader};
 use std::{fs::File, error::Error, f32::consts::PI};
 
+#[derive(Clone)]
 pub struct Circle{
     pub point: (i32, i32), 
     pub radius: i32
 }
 
+#[derive(Clone)]
 pub struct Layer{
     pub name: String, 
     pub color: String, 
@@ -128,7 +129,7 @@ fn test_cal_average_area(){
 }
 
 //2.1
-fn save_data<T: Data>(data: Vec<T>, filename: &str, filetype: &str) -> Result<(), Box<dyn Error>>{
+fn save_data<T: Clone + Data>(data: Vec<T>, layers: Option<Vec<Layer>>,  filename: &str, filetype: &str) -> Result<(), Box<dyn Error>>{
     let file = File::create(filename.to_owned() + "." + filetype)?;
     let mut writer = WriterBuilder::new()
         .has_headers(false)
@@ -142,7 +143,7 @@ fn save_data<T: Data>(data: Vec<T>, filename: &str, filetype: &str) -> Result<()
             }
         }
         "html" => {
-            let html = convert_to_html(data);
+            let html = convert_to_html(data, layers);
             writer.write_record(&[html])?;
         }
         _ => {
@@ -166,30 +167,113 @@ pub fn load_data(filename: &str) -> Result<Vec<Layer>, Box<dyn Error>>{
             let name: String = rec[0].to_string();
             let color: String = rec[1].to_string();
             let mut circles: Vec<Circle> = Vec::new();
-            for i in (2..rec.len()).step_by(3) {
-                let x:i32 = rec[i].parse()?;
-                let y:i32 = rec[i+1].parse()?;
-                let radius:i32 = rec[i+2].parse()?;
-                let circle = Circle{point: (x,y), radius};
-                circles.push(circle);
-            } 
+            for i in (2..rec.len()-2).step_by(3) {
+                let x: i32 = rec[i].parse()?;
+                let y: i32 = rec[i+1].parse()?;
+                let radius: i32 = rec[i+2].parse()?;
+
+                if x != 101 || y != 101 || radius != 101{
+                    let circle = Circle{point: (x,y), radius};
+                    circles.push(circle);
+                }
+            }
             result.push(Layer{name, color, circles});
         }
     }
     Ok(result)
 }
 
-//help
-fn convert_to_html<T: Data>(data: Vec<T>) -> String{
+fn convert_to_html<T: Data>(data: Vec<T>, layers: Option<Vec<Layer>>) -> String{ //set layer to be optional 
+
+    //Vec<(&str, f32)>
     let mut result = String::new();
+    result.push_str(&format!("{}",
+r#"<style>
+table, td {
+    border: 1px solid #000000;
+    border-collapse: collapse;
+}
+</style>
+"#));
+    result.push_str("<table>\n");
+    result.push_str(&format!("{:2}<tr>\n", ""));
+    result.push_str(&format!("{:4}<td>Layer</td>\n", ""));
+    result.push_str(&format!("{:4}<td>Average area of circles</td>\n", ""));
+    result.push_str(&format!("{:4}<td>Min area</td>\n", ""));
+    result.push_str(&format!("{:4}<td>Max area</td>\n", ""));
+    result.push_str(&format!("{:2}</tr>\n", ""));
+
+    for i in data{
+        let dt = i.get_data();
+        let parts = dt.split(",").collect::<Vec<&str>>();
+        let x = parts[0];
+        let y = parts[1];
+        result.push_str(&format!("{:2}<tr>\n", ""));
+        result.push_str(&format!("{:4}<td>{}</td>\n", "", x));
+        result.push_str(&format!("{:4}<td>{}</td>\n", "", y));
+
+        match layers {
+            //help
+            Some(ref layer) => {
+                let pair = find_max_min(layer.to_vec());
+                for i in pair{
+                    result.push_str(&format!("{:4}<td>{}</td>\n", "", i.0));
+                    result.push_str(&format!("{:4}<td>{}</td>\n", "", i.1));
+                }
+            }
+            None => {
+                continue;
+            }
+        }
+        result.push_str(&format!("{:2}<tr>\n", ""));
+    }
+    result.push_str("<table>\n");
     result
+}
+
+
+//help fix this
+pub fn find_max_min(data: Vec<Layer>) -> Vec<(f32, f32)>{
+    let mut partner: Vec<(f32, f32)> = Vec::new();
+    for i in 0..data.len(){ //2
+        let mut max = 0.0;
+        let mut min = 0.0;
+        let mut area = -1.0;
+        for j in 0..data[i].circles.len(){
+            let circle = &data[i].circles[j];
+            area = circle.radius as f32 * circle.radius as f32 * PI;
+            if area > max{
+                max = area;
+            }
+            else if area < min{
+                min = area;
+            }
+            if j == data[i].circles.len() - 1{
+                partner.push((min, max));
+            }
+        }
+    }
+    partner
+}
+
+pub fn cal_average_area2(layers: &Vec<Layer>) -> Vec<(&str, f32)>{
+    let mut result = Vec::new();
+    for layer in layers{
+        let mut sum = 0.0;
+        for circle in &layer.circles{ 
+            sum += circle.radius as f32 * circle.radius as f32 * PI;
+        }
+        let average = sum / layer.circles.len() as f32;
+        result.push((layer.name.as_str(), average));
+    }
+    result 
 }
 
 //2.1
 pub fn layers_save_csv(n: i32, filename: &str, filetype: &str) -> Result<(), Box<dyn Error>>{
     let mut rng = thread_rng();
     let data = gen_obj_layer_list(&mut rng, n);
-    let success = save_data(data, filename, filetype);
+    let success = save_data(data, None,  filename, filetype);
     match success {
         Ok(_) => println!("Save data successfully"),
         Err(e) => println!("Error: {}", e),
@@ -201,13 +285,17 @@ pub fn layers_save_csv(n: i32, filename: &str, filetype: &str) -> Result<(), Box
 pub fn read_csv(filename: &str, output_file: &str) -> Result<(), Box<dyn Error>>{
     let file = File::open(filename)?;
     let layers = load_data(filename).unwrap();
-    let result = cal_average_area(&layers);
-    let success = save_data(result, output_file, "csv");
+    let result: Vec<(&str, f32)> = cal_average_area(&layers);
+    let cloned_layers = layers.clone();
+    // let success = save_data(result, output_file, "csv");
+    let success: Result<(), Box<dyn Error>> = save_data(result, Some(cloned_layers), output_file, "html");
+
     match success {
         Ok(_) => println!("Save data successfully"),
         Err(e) => println!("Error: {}", e),
     }
     Ok(())
 }
+
 
 
