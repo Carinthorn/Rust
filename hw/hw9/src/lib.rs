@@ -3,14 +3,16 @@
 use rand::{Rng, thread_rng};
 use csv::{ReaderBuilder, WriterBuilder, Reader};
 use std::{fs::File, error::Error, f32::consts::PI};
+use std::f32::INFINITY;
 
-#[derive(Clone)]
+
+#[derive(Clone, Debug)]
 pub struct Circle{
     pub point: (i32, i32), 
     pub radius: i32
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Layer{
     pub name: String, 
     pub color: String, 
@@ -39,7 +41,7 @@ impl Data for Layer{
 }
 
 //1.1
-fn gen_obj_layer_list(rng: &mut impl Rng, n: i32) -> Vec<Layer>{
+pub fn gen_obj_layer_list(rng: &mut impl Rng, n: i32) -> Vec<Layer>{
     let mut result = Vec::new();
     for i in 1..=n{
         let name = format!("Layer {i}");
@@ -74,12 +76,10 @@ fn test_gen_obj_layer_list(){
     let mut rng = thread_rng();
     let result = gen_obj_layer_list(&mut rng, 10);
     assert_eq!(result.len(), 10);
-
-    //layer name 
-
-    //check if gen range > 20 and < 50
-
-    //check if gen x, y > -100 and < 100
+    assert_eq!(result[0].name, "Layer 1");
+    assert_eq!(result[9].name, "Layer 10");
+    assert!(result[0].circles.len() >= 20 && result[0].circles.len() <= 50);
+    assert!(result[0].circles[0].point.0 >= -100 && result[0].circles[0].point.0 <= 100);
 }
 
 //1.2
@@ -183,8 +183,8 @@ pub fn load_data(filename: &str) -> Result<Vec<Layer>, Box<dyn Error>>{
     Ok(result)
 }
 
-fn convert_to_html<T: Data>(data: Vec<T>, layers: Option<Vec<Layer>>) -> String{ //set layer to be optional 
 
+fn convert_to_html<T: Data>(data: Vec<T>, layers: Option<Vec<Layer>>) -> String{ //set layer to be optional 
     //Vec<(&str, f32)>
     let mut result = String::new();
     result.push_str(&format!("{}",
@@ -203,7 +203,7 @@ table, td {
     result.push_str(&format!("{:4}<td>Max area</td>\n", ""));
     result.push_str(&format!("{:2}</tr>\n", ""));
 
-    for i in data{
+    for (index, i) in data.iter().enumerate(){
         let dt = i.get_data();
         let parts = dt.split(",").collect::<Vec<&str>>();
         let x = parts[0];
@@ -211,17 +211,16 @@ table, td {
         result.push_str(&format!("{:2}<tr>\n", ""));
         result.push_str(&format!("{:4}<td>{}</td>\n", "", x));
         result.push_str(&format!("{:4}<td>{}</td>\n", "", y));
-
+        
         match layers {
-            //help
             Some(ref layer) => {
                 let pair = find_max_min(layer.to_vec());
-                for i in pair{
-                    result.push_str(&format!("{:4}<td>{}</td>\n", "", i.0));
-                    result.push_str(&format!("{:4}<td>{}</td>\n", "", i.1));
-                }
+                result.push_str(&format!("{:4}<td>{}</td>\n", "", pair[index].0));
+                result.push_str(&format!("{:4}<td>{}</td>\n", "", pair[index].1));
+                result.push_str(&format!("{:2}<tr>\n", ""));
             }
             None => {
+                result.push_str(&format!("{:2}<tr>\n", ""));
                 continue;
             }
         }
@@ -232,26 +231,24 @@ table, td {
 }
 
 
-//help fix this
 pub fn find_max_min(data: Vec<Layer>) -> Vec<(f32, f32)>{
     let mut partner: Vec<(f32, f32)> = Vec::new();
+
     for i in 0..data.len(){ //2
-        let mut max = 0.0;
-        let mut min = 0.0;
-        let mut area = -1.0;
+        let mut max = -INFINITY;
+        let mut min = INFINITY;
+
         for j in 0..data[i].circles.len(){
             let circle = &data[i].circles[j];
-            area = circle.radius as f32 * circle.radius as f32 * PI;
+            let area = circle.radius as f32 * circle.radius as f32 * PI;
             if area > max{
                 max = area;
             }
-            else if area < min{
+            if area < min{
                 min = area;
             }
-            if j == data[i].circles.len() - 1{
-                partner.push((min, max));
-            }
         }
+        partner.push((min, max));
     }
     partner
 }
@@ -284,7 +281,7 @@ pub fn layers_save_csv(n: i32, filename: &str, filetype: &str) -> Result<(), Box
 //2.2
 pub fn read_csv(filename: &str, output_file: &str) -> Result<(), Box<dyn Error>>{
     let file = File::open(filename)?;
-    let layers = load_data(filename).unwrap();
+    let layers: Vec<Layer> = load_data(filename).unwrap();
     let result: Vec<(&str, f32)> = cal_average_area(&layers);
     let cloned_layers = layers.clone();
     // let success = save_data(result, output_file, "csv");
