@@ -80,6 +80,8 @@ fn test_gen_obj_layer_list(){
     assert_eq!(result[9].name, "Layer 10");
     assert!(result[0].circles.len() >= 20 && result[0].circles.len() <= 50);
     assert!(result[0].circles[0].point.0 >= -100 && result[0].circles[0].point.0 <= 100);
+    assert!(result[0].circles[0].point.1 >= -100 && result[0].circles[0].point.1 <= 100);
+    assert!(result[0].circles[0].radius >= -10 && result[0].circles[0].radius <= 20);
 }
 
 //1.2
@@ -192,6 +194,7 @@ r#"<style>
 table, td {
     border: 1px solid #000000;
     border-collapse: collapse;
+    font-family: Arial, sans-serif;
 }
 </style>
 "#));
@@ -253,19 +256,6 @@ pub fn find_max_min(data: Vec<Layer>) -> Vec<(f32, f32)>{
     partner
 }
 
-pub fn cal_average_area2(layers: &Vec<Layer>) -> Vec<(&str, f32)>{
-    let mut result = Vec::new();
-    for layer in layers{
-        let mut sum = 0.0;
-        for circle in &layer.circles{ 
-            sum += circle.radius as f32 * circle.radius as f32 * PI;
-        }
-        let average = sum / layer.circles.len() as f32;
-        result.push((layer.name.as_str(), average));
-    }
-    result 
-}
-
 //2.1
 pub fn layers_save_csv(n: i32, filename: &str, filetype: &str) -> Result<(), Box<dyn Error>>{
     let mut rng = thread_rng();
@@ -284,8 +274,8 @@ pub fn read_csv(filename: &str, output_file: &str) -> Result<(), Box<dyn Error>>
     let layers: Vec<Layer> = load_data(filename).unwrap();
     let result: Vec<(&str, f32)> = cal_average_area(&layers);
     let cloned_layers = layers.clone();
-    // let success = save_data(result, output_file, "csv");
-    let success: Result<(), Box<dyn Error>> = save_data(result, Some(cloned_layers), output_file, "html");
+    let success = save_data(result, None, output_file, "csv");
+    // let success: Result<(), Box<dyn Error>> = save_data(result, Some(cloned_layers), output_file, "html");
 
     match success {
         Ok(_) => println!("Save data successfully"),
