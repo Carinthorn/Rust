@@ -1,7 +1,7 @@
 //Data serialization : structured data -> JSON/BSON/MessagePack/Base64
 //csv, excel , xml 
 //Data Deserialization : JSON/BSON/MessagePack/Base64 -> structured data
-use bson::{to_document, Document, Bson, to_bson, decode};
+use bson::{to_document, Document, Bson, to_bson};
 use serde_json::{self, json, Value};
 use base64::{encode, decode};
 use csv::{ReaderBuilder, WriterBuilder};
@@ -13,9 +13,20 @@ fn main(){
 
 }
 
-//Main feature 
-//Format Conversion : JSON -> BSON/MessagePack/Base64, BSON -> JSON/MessagePack/Base64, MessagePack -> JSON/BSON/Base64, Base64 -> JSON/BSON/MessagePack
-//fn load data 
+pub fn load_data(filename:&str){
+    let mut file = File::open(filename).expect("File to open file");
+    let mut contents = String::new();
+    match file.read_to_string(&mut content){
+        Ok(_) => {
+            println!("Succeeded to read file {}", filename);
+        }
+        Err(err) => {
+            eprintln!("Failed to read file: {}", err);
+            return Err(err)
+        }
+    }
+}
+
 // pub fn save_data(){
 
 // }
@@ -29,20 +40,9 @@ pub fn JSON_to_BSON(data : &str) -> Bson{
     bson_data
 }
 
-//problem
-pub fn BSON_to_JSON(bson_data: Bson) -> serde_json::Value{
-    let mut file = File::open("input.bson").expect("Failed to open");
-    let mut bson_data = Vec::new();
-    file.read_to_end(&mut bson_data).expect("Failed to read");
 
-    let bson_doc = bson::decode(&bson_data).expect("Failed to decode");
-    let json_value: Value = serde_json::from_str(&bson_doc.to_join()).expect("failed");
 
-}
-
-//deserilize Json -> Bson
-//Base64 Encoding/Decoding -> Encode text/image/text-base protocol -> binary, decode binary to text
-fn Base64_encode(text: &str) -> String{
-    let encoded = encode(text);
-    
-}
+//question 
+// ok to use preexisting crate like bson or csv or i have to implement it myself?'
+// ways to implement like matching bson -> json  
+// how to implement base64 encoding/decoding like text file -> binary file -> text file

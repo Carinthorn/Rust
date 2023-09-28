@@ -156,19 +156,13 @@ pub fn save_data<T: Clone + Data>(data: Vec<T>, layers: Option<Vec<Layer>>,  fil
     Ok(())
 }
  
-pub fn load_data(filename: &str) -> Result<Vec<Layer>, Box<dyn Error>>{
-    //handle 
+pub fn load_data(filename: &str) -> Result<Vec<Layer>, Box<dyn Error>>{ 
     if !filename.ends_with(".csv"){
         println!("Invalid file type");
         return Err("Invalid file type".into());
     }
 
-    let file = File::open(filename).map_err(|e| {
-        println!("Error opening file: {}", e);
-        Box::new(e) as Box<dyn Error>
-    });
-    let file = file.unwrap();
-
+    let file = File::open(filename).expect("Failed to open file");
     let mut reader = ReaderBuilder::new()
         .flexible(true)
         .delimiter(b',')
@@ -286,7 +280,7 @@ pub fn read_csv(filename: &str,  output_file: &str,  filetype: &str) -> Result<(
         println!("Error: File not found : {:?}", full_path);
         return Err("File not found".into());
     }
-
+    
     let layers: Vec<Layer> = load_data(&full_path.to_string_lossy()).unwrap();
     let result: Vec<(&str, f32)> = cal_average_area(&layers);
     let cloned_layers = layers.clone();

@@ -13,7 +13,7 @@ fn main() {
     }"#;
 
     let result = JSON_to_BSON(data);
-    
+    println!("{:?}", result)
 }
 
 
