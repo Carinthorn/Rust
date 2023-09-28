@@ -158,7 +158,17 @@ pub fn save_data<T: Clone + Data>(data: Vec<T>, layers: Option<Vec<Layer>>,  fil
  
 pub fn load_data(filename: &str) -> Result<Vec<Layer>, Box<dyn Error>>{
     //handle 
-    let file = File::open(filename)?;
+    if !filename.ends_with(".csv"){
+        println!("Invalid file type");
+        return Err("Invalid file type".into());
+    }
+
+    let file = File::open(filename).map_err(|e| {
+        println!("Error opening file: {}", e);
+        Box::new(e) as Box<dyn Error>
+    });
+    let file = file.unwrap();
+
     let mut reader = ReaderBuilder::new()
         .flexible(true)
         .delimiter(b',')
