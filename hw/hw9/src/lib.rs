@@ -241,10 +241,9 @@ table, td {
 pub fn find_max_min(data: Vec<Layer>) -> Vec<(f32, f32)>{
     let mut partner: Vec<(f32, f32)> = Vec::new();
 
-    for i in 0..data.len(){ //2
+    for i in 0..data.len(){ 
         let mut max = -INFINITY;
         let mut min = INFINITY;
-
         for j in 0..data[i].circles.len(){
             let circle = &data[i].circles[j];
             let area = circle.radius as f32 * circle.radius as f32 * PI;
@@ -266,7 +265,7 @@ pub fn layers_save_csv(n: i32, filename: &str, filetype: &str) -> Result<(), Box
     let data = gen_obj_layer_list(&mut rng, n);
     let success = save_data(data, None,  filename, filetype);
     match success {
-        Ok(_) => println!("Save data successfully"),
+        Ok(_) => println!("Save layers successfully"),
         Err(e) => println!("Error: {}", e),
     }
     Ok(())
@@ -276,11 +275,6 @@ pub fn layers_save_csv(n: i32, filename: &str, filetype: &str) -> Result<(), Box
 pub fn read_csv(filename: &str,  output_file: &str,  filetype: &str) -> Result<(), Box<dyn Error>>{
     let current_dir = std::env::current_dir()?;
     let full_path = current_dir.join(filename);
-    if !full_path.exists(){
-        println!("Error: File not found : {:?}", full_path);
-        return Err("File not found".into());
-    }
-    
     let layers: Vec<Layer> = load_data(&full_path.to_string_lossy()).unwrap();
     let result: Vec<(&str, f32)> = cal_average_area(&layers);
     let cloned_layers = layers.clone();
@@ -291,7 +285,7 @@ pub fn read_csv(filename: &str,  output_file: &str,  filetype: &str) -> Result<(
         success = save_data(result, Some(cloned_layers), output_file, "html");
     }
     match success {
-        Ok(_) => println!("Save data successfully"),
+        Ok(_) => println!("Read {}.csv and Save to {}.{} successfully", filename, output_file, filetype),
         Err(e) => println!("Error: {}", e),
     }
     Ok(())

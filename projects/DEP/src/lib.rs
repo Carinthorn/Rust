@@ -13,7 +13,7 @@ fn main(){
 
 }
 
-pub fn load_data(filename:&str){
+pub fn load_data(filename:&str) -> Result<>{
     let mut file = File::open(filename).expect("File to open file");
     let mut contents = String::new();
     match file.read_to_string(&mut content){
