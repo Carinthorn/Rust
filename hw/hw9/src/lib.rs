@@ -19,7 +19,7 @@ pub struct Layer{
     pub circles: Vec<Circle>
 }
 
-trait Data{
+pub trait Data{
     fn get_data(&self) -> String;
 }
 
@@ -131,7 +131,7 @@ fn test_cal_average_area(){
 }
 
 //2.1
-fn save_data<T: Clone + Data>(data: Vec<T>, layers: Option<Vec<Layer>>,  filename: &str, filetype: &str) -> Result<(), Box<dyn Error>>{
+pub fn save_data<T: Clone + Data>(data: Vec<T>, layers: Option<Vec<Layer>>,  filename: &str, filetype: &str) -> Result<(), Box<dyn Error>>{
     let file = File::create(filename.to_owned() + "." + filetype)?;
     let mut writer = WriterBuilder::new()
         .has_headers(false)
@@ -157,6 +157,7 @@ fn save_data<T: Clone + Data>(data: Vec<T>, layers: Option<Vec<Layer>>,  filenam
 }
  
 pub fn load_data(filename: &str) -> Result<Vec<Layer>, Box<dyn Error>>{
+    //handle 
     let file = File::open(filename)?;
     let mut reader = ReaderBuilder::new()
         .flexible(true)
@@ -187,7 +188,6 @@ pub fn load_data(filename: &str) -> Result<Vec<Layer>, Box<dyn Error>>{
 
 
 fn convert_to_html<T: Data>(data: Vec<T>, layers: Option<Vec<Layer>>) -> String{ //set layer to be optional 
-    //Vec<(&str, f32)>
     let mut result = String::new();
     result.push_str(&format!("{}",
 r#"<style>
@@ -269,14 +269,23 @@ pub fn layers_save_csv(n: i32, filename: &str, filetype: &str) -> Result<(), Box
 }
 
 //2.2
-pub fn read_csv(filename: &str, output_file: &str) -> Result<(), Box<dyn Error>>{
-    let file = File::open(filename)?;
-    let layers: Vec<Layer> = load_data(filename).unwrap();
+pub fn read_csv(filename: &str,  output_file: &str,  filetype: &str) -> Result<(), Box<dyn Error>>{
+    let current_dir = std::env::current_dir()?;
+    let full_path = current_dir.join(filename);
+    if !full_path.exists(){
+        println!("Error: File not found : {:?}", full_path);
+        return Err("File not found".into());
+    }
+
+    let layers: Vec<Layer> = load_data(&full_path.to_string_lossy()).unwrap();
     let result: Vec<(&str, f32)> = cal_average_area(&layers);
     let cloned_layers = layers.clone();
-    let success = save_data(result, None, output_file, "csv");
-    // let success: Result<(), Box<dyn Error>> = save_data(result, Some(cloned_layers), output_file, "html");
-
+    let mut success: Result<(), Box<dyn Error>> = Ok(());
+    if filetype == "csv"{
+        success = save_data(result, None, output_file, "csv");
+    }else if filetype == "html"{
+        success = save_data(result, Some(cloned_layers), output_file, "html");
+    }
     match success {
         Ok(_) => println!("Save data successfully"),
         Err(e) => println!("Error: {}", e),
