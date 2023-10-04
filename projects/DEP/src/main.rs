@@ -12,8 +12,10 @@ fn main() {
         ]
     }"#;
 
-    let result = JSON_to_BSON(data);
-    println!("{:?}", result)
+    // let result = JSON_to_BSON(data);
+    // println!("{:?}", result)
+
+    JSON_to_MessagePack(data);
 }
 
 
